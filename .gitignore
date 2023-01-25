@@ -1,1 +1,4 @@
 website.py
+gecko*
+__pycache__
+**/
