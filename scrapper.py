@@ -49,32 +49,43 @@ chapter = website.host + ((soup.find("div", class_="btn")).findChildren("a"))[1]
 driver.get(chapter)
 soup = BeautifulSoup(driver.page_source, 'lxml')
 
-
+amount_chapter = input("How many chapters does the lightnovel have?: ")
 chapterList = []
 
 numbering = 1
 while (True):
-    if(numbering < 2):
-        next_chap = website.host + (soup.find("a", {"title": "Read Next chapter"}))['href']
-        chap_tit = (soup.find("span", class_="chapter")).find(text=True)
-        chap_txt = (soup.find("div", class_="txt")).extract()
-        chap_num = numbering
-        for script in chap_txt("div"):
-            script.decompose()
-        for script in chap_txt("sub"):
-            script.decompose()
-        test = xmltodict.parse(str(chap_txt))
-        chapter = {
-            "title": str(chap_tit),
-            "id": chap_num,
-            "content": xmltodict.parse(str(chap_txt))
-        }
-        chapterList.append(chapter)
-        driver.get(next_chap)
-        soup = BeautifulSoup(driver.page_source, 'lxml')
-        numbering = numbering + 1
+    print("Working on chapter " + str(numbering))
+    if(numbering == 1432):
+        next_chap = website.website
     else:
+        next_chap = website.host + (soup.find("a", {"title": "Read Next chapter"}))['href']
+    chap_tit = (soup.find("span", class_="chapter")).find(text=True)
+    chap_txt = (soup.find("div", class_="txt")).extract()
+    chap_num = numbering
+    for script in chap_txt("div"):
+        script.decompose()
+    for script in chap_txt("sub"):
+        script.decompose()
+    for script in chap_txt("h4"):
+        script.decompose()
+    for script in chap_txt("strong"):
+        script.decompose()
+    test = xmltodict.parse(str(chap_txt))
+    chapter = {
+        "title": str(chap_tit),
+        "id": chap_num,
+        "content": xmltodict.parse(str(chap_txt))
+    }
+    if(next_chap == website.website):
+        print(next_chap)
+        print(website.website)
         break
+    print("got here")
+    chapterList.append(chapter)
+    driver.get(next_chap)
+    soup = BeautifulSoup(driver.page_source, 'lxml')
+    numbering = numbering + 1
+
 
 # save content and file
 ln = {
