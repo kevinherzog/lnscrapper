@@ -55,7 +55,7 @@ chapterList = []
 numbering = 1
 while (True):
     print("Working on chapter " + str(numbering))
-    if(numbering == 1432):
+    if(numbering == amount_chapter):
         next_chap = website.website
     else:
         next_chap = website.host + (soup.find("a", {"title": "Read Next chapter"}))['href']
@@ -77,10 +77,7 @@ while (True):
         "content": xmltodict.parse(str(chap_txt))
     }
     if(next_chap == website.website):
-        print(next_chap)
-        print(website.website)
         break
-    print("got here")
     chapterList.append(chapter)
     driver.get(next_chap)
     soup = BeautifulSoup(driver.page_source, 'lxml')
